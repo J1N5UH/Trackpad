@@ -21,3 +21,20 @@ Mediapipe는  Google에서 개발한 오픈 소스 프레임워크로, 컴퓨터
 
 # 2. 학습 데이터 전처리 과정
 
+1번 과정에서 생성한 데이터들을 Numpy 형태의 데이터로 추출을 합니다.
+
+Numpy에는 index 0번 부터 index 20번 까지의 x, y좌표값을 받아오며 프레임 단위로 Numpy 배열을 생성합니다.
+
+    if results.multi_hand_landmarks:
+        for hand_landmarks in results.multi_hand_landmarks:
+            # 각 랜드마크의 x, y 좌표 추출
+            landmarks = []
+            for id, lm in enumerate(hand_landmarks.landmark):
+                h, w, c = frame.shape
+                cx, cy = int(lm.x * w), int(lm.y * h)
+                landmarks.extend([cx, cy])
+            
+            return np.array(landmarks)
+
+# 3. 학습 데이터 학습
+
