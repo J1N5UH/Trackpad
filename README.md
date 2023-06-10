@@ -2,7 +2,7 @@
 
 ![GIF](trackpad.gif)
 
-### 총 4단계를 거쳐서 진행한 Project이며, 각 단계는 아래와 같습니다.
+### 총 5단계를 거쳐서 진행한 Project이며, 각 단계는 아래와 같습니다.
 
 #### 1. 학습 데이터 수집
 #### 2. 학습 데이터 전처리 과정
@@ -18,6 +18,7 @@ Mediapipe는  Google에서 개발한 오픈 소스 프레임워크로, 컴퓨터
 # 1. 학습 데이터 수집
 
 학습 데이터는 직접 카메라로 다양한 제스처를 찍으며 총 1024개의 영상을 직접 만들어서 제작 하였습니다.
+영상을 제작 할 때는 한 가지의 제스처만 촬영을 하며 딱 한번의 행동만들 촬영하였습니다.
 
 # 2. 학습 데이터 전처리 과정
 
@@ -35,6 +36,31 @@ Numpy에는 index 0번 부터 index 20번 까지의 x, y좌표값을 받아오�
                 landmarks.extend([cx, cy])
             
             return np.array(landmarks)
+            
+여기에서 추출되는 데이터는 다음과 같습니다.
+
 
 # 3. 학습 데이터 학습
+
+2번에서 생성한 데이터를 Tensorflow 학습모델을 이용하여 학습을 합니다.
+각 제스처마다 따로 학습을 시켜서 라벨링을 하고 이후 하나의 모델로 합치는 과정입니다.
+
+
+    from tensorflow.keras.callbacks import ModelCheckpoint, ReduceLRonPlateau
+
+        history = model.fit(
+        x_train,
+        y_train,
+        validation_data=(x_val, y_val),
+        epochs=200,
+        callbacks=[
+            ModelCheckpoint('models/model.h5', monitor='val_acc', verbose=1, save_best_only=True, mode='auto'),
+            ReduceLROnPlateau(monitor='val_acc', factor=0.5, patience=50, verbose=1, mode='auto')
+        ]
+        )
+       
+# 4. TrackPad 구현
+
+최종적으로 구현하는 단계 입니다.
+
 
