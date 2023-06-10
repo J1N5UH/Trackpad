@@ -67,4 +67,23 @@ Numpy에는 index 0번 부터 index 20번 까지의 x, y좌표값을 받아오�
 
 최종적으로 구현하는 단계 입니다.
 
+학습된 모델을 불러와서 카메라에서 탐지한 제스처의 행위를 인식하여 기능을 수행합니다.
+
+
+    landmarks = process_frame(frame)
+    if landmarks is not None:
+        landmarks = np.expand_dims(landmarks, axis=0)  # 모델에 입력하기 위해 차원을 맞춰줍니다.
+        action = model.predict(landmarks)
+        action = np.argmax(action)  # 가장 높은 확률을 가진 클래스의 인덱스를 얻습니다.
+
+        # 동작 실행
+        if action == 0:
+            pyautogui.click(clicks=1)  # 한 번 클릭
+        elif action == 1:
+            pyautogui.click(clicks=2)  # 두 번 클릭
+        elif action == 2:
+            pyautogui.scroll(1)  # 스크롤 업
+        elif action == 3:
+            pyautogui.scroll(-1)  # 스크롤 다운
+
 
